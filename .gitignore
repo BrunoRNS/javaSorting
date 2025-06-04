@@ -1,0 +1,12 @@
+# Ignore java compiled files
+*.class
+*.jar
+
+# Ignore python cache files
+__pycache__/
+
+# Ignore logs
+*.log
+
+# Ignore vscode files
+.vscode/
