@@ -19,7 +19,7 @@ public class MergeMaxHeap {
         
     }
 
-    public static int[] compareBlock(int[] block) {
+    private static int[] compareBlock(int[] block) {
 
         boolean needChanges = Math.max(block[1], block[2]) > block[0];
 
@@ -52,33 +52,55 @@ public class MergeMaxHeap {
 
     }
 
-    public static int[] adjustHeap(int[] heap) {
+    private static int[] adjustHeap(int[] heap) {
 
-        int count = 0;
+        int[] newHeap;
 
-        while (Math.pow(2, count) < heap.length) {
+        boolean isCorrect = (Math.log(heap.length+1) / Math.log(2)) % 2 == 0;
 
+        if (!isCorrect) {
 
+            int size = heap.length+1;
 
+            for (int i = size; ((Math.log(i) / Math.log(2)) % 2 != 0); i++) {
 
-            count++;
+                size = i;
+
+            }
+
+            size = (int) (Math.log(size) / Math.log(2));
+
+            newHeap = new int[size];
+
+            System.arraycopy(heap, 0, newHeap, 0, heap.length);
+
+            int[] nZeros = new int[size - heap.length];
+
+            System.arraycopy(nZeros, 0, newHeap, heap.length, nZeros.length);
+
+            return newHeap;
 
         }
 
-        if (Math.pow(2, count) != heap.length) {
+        return heap;
 
+    }
+
+    private static int[] maxHeap(int[] originalHeap) {
+
+        int[] heap = adjustHeap(originalHeap);
+
+        int height = (int) (Math.log(heap.length+1) / Math.log(2));
+
+        int[] levels = new int[height];
+
+        for (int i = 0; i < height; i++) {
+
+            levels[i] = i;
 
         }
 
         return new int[0];
-
-    }
-
-    public static int[] maxHeap(int[] heap) {
-
-        int[] maxHeap =  new int[heap.length];
-
-        return maxHeap;
 
     }
 
