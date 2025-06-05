@@ -86,6 +86,18 @@ public class MergeMaxHeap {
 
     }
 
+    private static int[][] splitBlocksFromLevel(int level) {
+
+        int[][] blocksFromLevel = new int[(int) Math.pow(2, level+1) / 2][3];
+
+        for (int i = 0; i < (int) Math.pow(2, level+1) / 2; i++) {
+
+            
+
+        }
+
+    }
+
     private static int[] maxHeap(int[] originalHeap) {
 
         int[] heap = adjustHeap(originalHeap);
@@ -99,6 +111,7 @@ public class MergeMaxHeap {
             levels[i] = i;
 
         }
+
 
         return new int[0];
 
