@@ -264,7 +264,24 @@ public class MergeMaxHeap {
         System.arraycopy(maxheap1, 0, heap, 0, maxheap1.length);
         System.arraycopy(maxheap2, 0, heap, maxheap1.length, maxheap2.length);
 
-        return removeZeros(heapify(adjustHeap(heap)));
+        int[] newHeap = new int[heap.length];
+        
+        int i = 0;
+
+        int[] actualHeap = heapify(adjustHeap(heap));
+
+        while (actualHeap[0] != 0) {
+
+            newHeap[i] = actualHeap[0];
+            i++;
+
+            actualHeap[0] = 0;
+
+            actualHeap = heapify(actualHeap);
+
+        }
+
+        return newHeap;
 
     }
 
