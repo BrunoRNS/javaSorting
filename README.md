@@ -39,7 +39,7 @@ Finds all prime numbers up to a given limit using the classic sieve technique.
 
 ## 🔧 How to Run
 
-Make sure you have Java installed. To compile and run:
+Make sure you have JDK installed. To compile and run:
 
 ```sh
 javac src/MergeMaxHeap.java
