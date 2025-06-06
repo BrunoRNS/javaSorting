@@ -222,41 +222,6 @@ public class MergeMaxHeap {
 
     }
 
-    private static int[] removeZeros(int[] heap) {
-
-        int count = 0;
-
-        for (int i = 0; i < heap.length; i++) {
-
-            if (heap[i] != 0) {
-
-                count++;
-
-            }
-
-        }
-
-        int[] cleanedHeap = new int[count];
-
-        int index = 0;
-
-        for (int i = 0; i < heap.length; i++) {
-
-            if (heap[i] != 0) {
-
-                cleanedHeap[index] = heap[i];
-
-                index++;
-
-            }
-
-        }
-
-        return cleanedHeap;
-
-    }
-
-
     public static int[] mergeMaxHeap(int[] maxheap1, int[] maxheap2) {
 
         int[] heap = new int[maxheap1.length + maxheap2.length];
