@@ -8,8 +8,8 @@ public class MergeMaxHeap {
 
     public static void main(String[] args) {
 
-        int[] maxheap1 = {10, 5, 6, 2};
-        int[] maxheap2 = {12, 7, 9};
+        int[] maxheap1 = {10, 5, 6, 2, 10000, 450, 300};
+        int[] maxheap2 = {12, 7, 9, 30, 900, 99};
 
         int[] mergedMaxHeap = mergeMaxHeap(maxheap1, maxheap2);
 
