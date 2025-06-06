@@ -1,4 +1,7 @@
-// This is the implementation of MergeMaxHeap method that you can find in:
+
+import java.util.Arrays;
+
+
 // https://www.geeksforgeeks.org/problems/merge-two-binary-max-heap0144/1?page=1&category=Heap&difficulty=Easy&sortBy=submissions
 
 public class MergeMaxHeap {
@@ -12,16 +15,18 @@ public class MergeMaxHeap {
 
         for (int i : mergedMaxHeap) {
 
-            System.out.println(i);
+            System.out.print(i + " ");
 
         }
+
+        System.out.println();
 
         
     }
 
     private static int[] compareBlock(int[] block) {
 
-        boolean needChanges = Math.max(block[1], block[2]) > block[0];
+        boolean needChanges = block[1] > block[0] || block[2] > block[0];
 
 
         if (needChanges) {
@@ -52,33 +57,101 @@ public class MergeMaxHeap {
 
     }
 
+    private static int[][] deepCopyBlocks(int[][] blocks) {
+
+        int[][] copy = new int[blocks.length][3];
+
+        for (int i = 0; i < blocks.length; i++) {
+
+            copy[i] = Arrays.copyOf(blocks[i], 3);
+
+        }
+
+        return copy;
+
+    }
+    
+
     private static int[] adjustHeap(int[] heap) {
 
-        int[] newHeap;
+        int length = heap.length;
 
-        boolean isCorrect = (Math.log(heap.length+1) / Math.log(2)) % 2 == 0;
+        int height = 0;
 
-        if (!isCorrect) {
+        while ((int) Math.pow(2, height) - 1 < length) {
 
-            int size = heap.length+1;
+            height++;
 
-            for (int i = size; ((Math.log(i) / Math.log(2)) % 2 != 0); i++) {
+        }
 
-                size = i;
+        int fullSize = (int) Math.pow(2, height) - 1;
+
+        int[] newHeap = new int[fullSize];
+
+
+        for (int i = 0; i < newHeap.length; i++) {
+
+            if (i < heap.length) {
+
+                newHeap[i] = heap[i];
+
+            } else {
+
+                newHeap[i] = 0;
+
+            }
+            
+        }
+
+        return newHeap;
+    }
+
+    private static int[][] splitBlocksFromLevel(int[] heap, int level) {
+    
+        int startIndex = (int) Math.pow(2, level) - 1;
+        int endIndex = Math.min(heap.length, (int) Math.pow(2, level + 1) - 1);
+        int numBlocks = (endIndex - startIndex);
+
+        int[][] blocksFromLevel = new int[numBlocks][3];
+
+        for (int i = 0; i < numBlocks; i++) {
+
+            int fatherIndex = startIndex + i;
+            int leftChildIndex = (2 * fatherIndex ) + 1;
+            int rightChildIndex = (2 * fatherIndex )+ 2;
+
+            blocksFromLevel[i][0] = heap[fatherIndex];
+            blocksFromLevel[i][1] = heap[leftChildIndex];
+            blocksFromLevel[i][2] = heap[rightChildIndex];
+        
+        }
+
+        return blocksFromLevel;
+    }
+
+    private static int[] applyBlocksOnHeap(int[] heap, int[][] blocks, int level) {
+
+        int startIndex = (int) Math.pow(2, level) - 1;
+
+        for (int i = 0; i < blocks.length; i++) {
+
+            int fatherIndex = startIndex + i;
+            int leftChildIndex = 2 * fatherIndex + 1;
+            int rightChildIndex = 2 * fatherIndex + 2;
+
+            heap[fatherIndex] = blocks[i][0];
+
+            if (leftChildIndex < heap.length) {
+
+                heap[leftChildIndex] = blocks[i][1];
 
             }
 
-            size = (int) (Math.log(size) / Math.log(2));
+            if (rightChildIndex < heap.length) {
 
-            newHeap = new int[size];
+                heap[rightChildIndex] = blocks[i][2];
 
-            System.arraycopy(heap, 0, newHeap, 0, heap.length);
-
-            int[] nZeros = new int[size - heap.length];
-
-            System.arraycopy(nZeros, 0, newHeap, heap.length, nZeros.length);
-
-            return newHeap;
+            }
 
         }
 
@@ -86,49 +159,112 @@ public class MergeMaxHeap {
 
     }
 
-    private static int[][] splitBlocksFromLevel(int level) {
+    private static int[][] iterateFromLevel(int[][] blocks) {
 
-        int[][] blocksFromLevel = new int[(int) Math.pow(2, level+1) / 2][3];
+        for (int i = 0; i < blocks.length; i++) {
 
-        for (int i = 0; i < (int) Math.pow(2, level+1) / 2; i++) {
-
-            
+            blocks[i] = compareBlock(blocks[i]);
 
         }
 
+        return blocks;
+
     }
 
-    private static int[] maxHeap(int[] originalHeap) {
+    private static boolean hasChanged(int[][] oldBlocks, int[][] newBlocks) {
 
-        int[] heap = adjustHeap(originalHeap);
+        for (int i = 0; i < oldBlocks.length; i++) {
 
-        int height = (int) (Math.log(heap.length+1) / Math.log(2));
+            if (!Arrays.equals(oldBlocks[i], newBlocks[i])) {
 
-        int[] levels = new int[height];
+                return true;
 
-        for (int i = 0; i < height; i++) {
-
-            levels[i] = i;
+            }
 
         }
 
-
-        return new int[0];
+        return false;
 
     }
+
+    private static int[] heapify(int[] originalHeap) {
+
+        int[] heap = Arrays.copyOf(originalHeap, originalHeap.length);
+        int height = (int) (Math.log(heap.length) / Math.log(2));
+
+        int level = height - 1;
+
+        while (level >= 0) {
+
+            int[][] splittedLevel = splitBlocksFromLevel(heap, level);
+            int[][] oldBlocks = deepCopyBlocks(splittedLevel);
+            int[][] iteratedLevel = iterateFromLevel(splittedLevel);
+
+            if (hasChanged(oldBlocks, iteratedLevel)) {
+
+                heap = applyBlocksOnHeap(heap, iteratedLevel, level);
+
+                if (level < height - 1) {
+
+                    level--;
+
+                }
+
+            } else {
+
+                level--;
+
+            }
+
+        }
+
+        return heap;
+
+    }
+
+    private static int[] removeZeros(int[] heap) {
+
+        int count = 0;
+
+        for (int i = 0; i < heap.length; i++) {
+
+            if (heap[i] != 0) {
+
+                count++;
+
+            }
+
+        }
+
+        int[] cleanedHeap = new int[count];
+
+        int index = 0;
+
+        for (int i = 0; i < heap.length; i++) {
+
+            if (heap[i] != 0) {
+
+                cleanedHeap[index] = heap[i];
+
+                index++;
+
+            }
+
+        }
+
+        return cleanedHeap;
+
+    }
+
 
     public static int[] mergeMaxHeap(int[] maxheap1, int[] maxheap2) {
 
-        int[] newHeap = new int[maxheap1.length + maxheap2.length];
+        int[] heap = new int[maxheap1.length + maxheap2.length];
 
-        System.arraycopy(maxheap1, 0, newHeap, 0, maxheap1.length);
-        System.arraycopy(maxheap2, 0, newHeap, maxheap1.length, maxheap2.length);
+        System.arraycopy(maxheap1, 0, heap, 0, maxheap1.length);
+        System.arraycopy(maxheap2, 0, heap, maxheap1.length, maxheap2.length);
 
-
-
-
-
-        return newHeap;
+        return removeZeros(heapify(adjustHeap(heap)));
 
     }
 
