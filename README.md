@@ -6,8 +6,6 @@ This repository contains Java implementations of three fundamental algorithms:
 2. **Counting Sort**: A linear-time sorting algorithm for integers.
 3. **Sieve of Eratosthenes**: A prime number search algorithm using the classical sieve method.
 
----
-
 ## 🧠 Algorithms Included
 
 ### 1. Max Heap Merge (`MaxHeapMerge.java`)
@@ -34,8 +32,6 @@ Finds all prime numbers up to a given limit using the classic sieve technique.
 - **Input**: An integer `n`
 - **Output**: A list of prime numbers less than or equal to `n`
 - **Time Complexity**: O(n log log n)
-
----
 
 ## 🔧 How to Run
 
